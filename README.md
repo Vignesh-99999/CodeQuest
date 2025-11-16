@@ -95,5 +95,5 @@ Below are screenshots extracted from `documentation.docx`.
 ![image18](docs/images/image18.png)
 ![image19](docs/images/image19.png)
 ![image20](docs/images/image20.png)
-![image22](docs/images/image22.png)
+
 
