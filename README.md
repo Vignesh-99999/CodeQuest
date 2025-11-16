@@ -87,17 +87,6 @@ This project is for educational/demo use. Add your preferred license.
 
 Below are screenshots extracted from `documentation.docx`.
 
-![image1](docs/images/image1.jpeg)
-![image2](docs/images/image2.png)
-![image3](docs/images/image3.png)
-![image4](docs/images/image4.png)
-![image5](docs/images/image5.png)
-![image6](docs/images/image6.jpeg)
-![image7](docs/images/image7.png)
-![image8](docs/images/image8.png)
-![image9](docs/images/image9.png)
-![image10](docs/images/image10.png)
-![image11](docs/images/image11.png)
 ![image12](docs/images/image12.png)
 ![image13](docs/images/image13.png)
 ![image14](docs/images/image14.png)
