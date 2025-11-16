@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap Form</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-image: url('your-coding-theme-image.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .form-container {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 10px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 form-container">
+        <h2 class="text-center">Student Enrollment Form</h2>
+        <form method="POST" action="submit/" name="signup">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" class="form-control" id="age" name="age" placeholder="Enter your age">
+          </div>
+          <div class="form-group">
+            <label for="div">Division</label>
+            <input type="text" class="form-control" id="div" name="Division"  placeholder="Enter your division">
+          </div>
+          <div class="form-group">
+            <label for="enroll">Enrollment Number</label>
+            <input type="text" class="form-control" id="enroll" name ="Enroll"placeholder="Enter your enrollment number">
+          </div>
+          <div class="form-group">
+            <label for="roll">Password</label>
+            <input type="password" class="form-control" id="email" name="password" placeholder="Enter the password">
+          </div>
+          <div class="form-group">
+            <label for="roll">Email</label>
+            <input type="text" class="form-control" id="email" name="Email" placeholder="Enter your Email Id">
+          </div>
+          <div class="form-group">
+            <label for="roll">Roll Number</label>
+            <input type="text" class="form-control" id="roll"  name="Roll" placeholder="Enter your roll number">
+          </div>
+          <div class="form-group">
+            <label for="course">Course</label>
+            <select class="form-control" id="course" name="Course">
+              <option>Select your course</option>
+              <option value="course1">Course 1</option>
+              <option value="course2">Course 2</option>
+              <option value="course3">Course 3</option>
+            </select>
+          </div>
+
+                               <button class="btn btn-primary btnroo text-center btn-block no-margin "> Sign In</button>
+                            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

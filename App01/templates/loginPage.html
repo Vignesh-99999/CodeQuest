@@ -1,0 +1,82 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login Page</title>
+    <link rel="shortcut icon" href="{% static 'assetsLogin/images/fav.png' %}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,600,700" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'assetsLogin/images/fav.jpg' %}">
+    <link rel="stylesheet" href="{% static 'assetsLogin/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assetsLogin/css/fontawsom-all.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assetsLogin/css/style.css' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    {% if error1 %}
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '{{ error1 }}',
+            position: 'top', // Position at the top
+            showConfirmButton: true,
+            confirmButtonColor: '#d33',
+            timer: 3000 // Auto close after 3 seconds
+        });
+    </script>
+    {% endif %}
+    <div class="container-fluid">
+        <div class="container pt-5 pb-5 pl-5 pr-5">
+            <div class="col-xl-10 col-lg-11 login-container">
+                <div class="row">
+                    <div class="col-lg-7 img-box">
+                        {% comment %} <img src="assetsLogin/images/login-banner.png" alt=""> {% endcomment %}
+                        <img src="{% static 'assetsLogin/images/login-banner.png' %}" alt="Login">
+                    </div>
+                    <div class="col-lg-5 padding">
+                        <div class="login-box pt-6 pb-6 mt-5">
+                            <h4><b>Welcome Back!</b></h4>
+                            <form method= "POST"  action= "{% url 'LoginPost' %}">
+                                {% csrf_token %}
+                            <div class="login-row row no-margin">
+                                <label for=""><i class="fas fa-envelope"></i> Enrollment    </label>
+                                <input type="text" class="form-control form-control-sm" name=enroll>
+                            </div>
+
+                             <div class="login-row row no-margin">
+                                <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
+                                <input type="text" class="form-control form-control-sm" name="stu_pass">
+                            </div>
+
+                             <!-- <div class="login-row row forrr no-margin">
+                               <p> <input type="checkbox"> Remember Me</p>
+                               <p><a href="">Forget Password?</a></p>
+                            </div> -->
+                            
+                             <div class="login-row btnroo text-center no-margin">
+                               <button class="btn btn-primary btn-sm"> Sign In</button>
+                            </div>
+                            {% if error %}
+                <div class="alert alert-danger mt-3">
+                    {{ error }}
+                </div>
+            {% endif %}
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+    <script src="assetsLogin/js/jquery-3.2.1.min.js"></script>
+    <script src="assetsLogin/js/popper.min.js"></script>
+    <script src="assetsLogin/js/bootstrap.min.js"></script>
+    <script src="assetsLogin/plugins/scroll-fixed/jquery-scrolltofixed-min.js"></script>
+    <script src="assetsLogin/js/script.js"></script>
+</html>

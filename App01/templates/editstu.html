@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="{% static 'executor/css/styles.css' %}" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('your-coding-theme-image.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #333;
+        }
+        .form-container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            color: #007bff;
+        }
+        .form-container .form-group label {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    {% include 'headeradmin.html' %}
+    <div id="layoutSidenav">
+        {% include 'sidebaradmin.html' %}
+        <div id="layoutSidenav_content">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 form-container">
+                        <h2 class="text-center">Edit Student Details</h2>
+                        <form method="POST" action="{% url 'edit_stu_save' %}" name="signupp">
+                            {% csrf_token %}
+                            <input type="hidden" id="hid" name="id" value="{{ i.stu_id }}">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" value="{{ i.name }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" class="form-control" id="age" name="age" placeholder="Enter your age" value="{{ i.age }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="division">Division</label>
+                                <input type="text" class="form-control" id="division" name="Division" placeholder="Enter your division" value="{{ i.div }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="enroll">Enrollment Number</label>
+                                <input type="text" class="form-control" id="enroll" name="Enroll" placeholder="Enter your enrollment number" value="{{ i.enroll }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="stu_pass">Password</label>
+                                <input type="password" class="form-control" id="stu_pass" name="password" placeholder="Enter the password" value="{{ i.stu_pass }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="Email" placeholder="Enter your Email Id" value="{{ i.email }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="roll_no">Roll Number</label>
+                                <input type="text" class="form-control" id="roll_no" name="Roll" placeholder="Enter your roll number" value="{{ i.roll_no }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="course_id">Course</label>
+                                <select class="form-control" id="course" name="Course">
+                                    <option>Select your course</option>
+                                    <option value="1">Course 1</option>
+                                    <option value="2">Course 2</option>
+                                    <option value="3">Course 3</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Update Student</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% include 'footeradmin.html' %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

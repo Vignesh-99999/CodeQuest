@@ -1,0 +1,469 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Workspace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/theme/solarized.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/cpp/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/javascript/javascript.min.js"></script>
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <style>
+        :root {
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --panel-bg: #ffffff;
+            --editor-bg: #f8f8f8;
+            --button-bg: #4CAF50;
+            --button-hover: #45a049;
+            --terminal-bg: #1e1e1e;
+            --terminal-text: #f0f0f0;
+        }
+
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --panel-bg: #1e1e1e;
+            --editor-bg: #2e2e2e;
+            --button-bg: #5cb85c;
+            --button-hover: #4cae4c;
+            --terminal-bg: #000000;
+            --terminal-text: #f0f0f0;
+        }
+
+        body {
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding-top: 60px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .left-panel, .right-panel {
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 80px; /* Adjust this value based on your header height */
+            height: calc(100vh - 100px); /* Adjust this value to leave some space at the bottom */
+            overflow-y: auto;
+        }
+
+        .right-panel {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .CodeMirror {
+            height: auto;
+            min-height: 300px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .font-size-selector {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid var(--button-bg);
+            font-size: 16px;
+            appearance: none;
+            background-color: var(--panel-bg);
+            color: var(--text-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234CAF50' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        .font-size-selector:hover {
+            background-color: var(--bg-color);
+            border-color: var(--button-hover);
+        }
+
+        .font-size-selector:focus {
+            outline: none;
+            border-color: var(--button-hover);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+
+        button {
+            background-color: var(--button-bg);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .terminal {
+            background-color: var(--terminal-bg);
+            color: var(--terminal-text);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-y: auto;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            height: 300px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h3 {
+            color: var(--button-bg);
+            margin-top: 0;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--panel-bg);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .back-button {
+            background-color: var(--button-bg);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .theme-switch label {
+            display: flex;
+            align-items: center;
+            background-color: #ccc;
+            width: 50px;
+            height: 24px;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-switch label::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-switch input:checked + label {
+            background-color: var(--button-bg);
+        }
+
+        .theme-switch input:checked + label::after {
+            transform: translateX(26px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .left-panel, .right-panel, .editor-container, .terminal {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: var(--text-color);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{% url 'UserIndex' %}"><button class="back-button">Back</button></a>
+        <div class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <label for="theme-toggle"></label>
+        </div>
+    </div>
+    <div class="container">
+        <div class="left-panel">
+            <h3>Description</h3>
+            <div class="description">
+                <p>{{ db_que.description }}</p>
+            </div>
+            <h3>Example</h3>
+            <div class="example">
+                <p><strong>Expected Input:</strong> {{ in_out.in_put }}</p>
+                <p><strong>Expected Output:</strong> {{ in_out.out_put }}</p>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="editor-container">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label for="fontSize" style="margin-right: 10px;">Font Size:</label>
+                    <select class="font-size-selector" id="fontSize">
+                        <option value="12">12px</option>
+                        <option value="14" selected>14px</option>
+                        <option value="16">16px</option>
+                        <option value="18">18px</option>
+                    </select>
+                </div>
+                <textarea id="editor" name="codeEditor"></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                    <button id="run-code" type="button">Run Code</button>
+                    <form method="POST" style="display: none;" id="code-form" action="submit-code/">
+                        {% csrf_token %}
+                        <textarea id="hidden-editor" name="code"></textarea>
+                        <input type="hidden" id="hid" name="id" value="{{ in_out.que_id_id }}">
+                    </form>
+                   <!-- Updated submit button -->
+<button id="submit" type="button" data-url="{% url 'SubmitQuestion_post' in_out.que_id_id %}">Submit Code</button>
+
+                </div>
+            </div>
+            <div class="terminal" id="output">
+                <pre>Welcome to the terminal. Your output will be displayed here.</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const languageMode = "{% if language == 'C' %}text/x-csrc{% elif language == 'C++' %}text/x-c++src{% elif language == 'JAVA' %}text/x-java{% elif language == 'Python' %}text/x-python{% elif language == 'JavaScript' %}javascript{% endif %}";
+        document.getElementById("hid").value = '{{ in_out.que_id_id }}';
+        var submitButton = document.getElementById("submit");
+        var form = document.getElementById("code-form");
+
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode');
+            editor.setOption("theme", this.checked ? "dracula" : "solarized light");
+        });
+        
+        document.getElementById('fontSize').addEventListener('change', function() {
+            editor.getWrapperElement().style.fontSize = this.value + 'px';
+            editor.refresh();
+        });
+
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            button.addEventListener('mouseup', function() {
+                this.style.transform = 'scale(1)';
+            });
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+    <script>
+        const editorElement = document.getElementById('editor');
+const outputElement = document.getElementById('output');
+const runCodeButton = document.getElementById('run-code');
+const lang_name="{{language}}"
+
+// Default code templates for different languages
+const templateCode = {
+    'C': `#include <stdio.h>
+  int main() {
+      // Write your code here
+      return 0;
+  }`,
+    'C++': `#include <iostream>
+  
+  int main() {
+      // Your code here
+      return 0;
+  }`,
+    'JAVA': `public class Main {
+      public static void main(String[] args) {
+          // Your code here
+      }
+  }`,
+    'PYTHON': `# Your code here in Python`,
+    'JavaScript': `// Your code here in JavaScript`
+  };
+  
+
+editorElement.value = templateCode[lang_name];
+submitButton.disabled = true;
+// Initialize CodeMirror editor with auto-indentation and other settings
+const editor = CodeMirror.fromTextArea(editorElement, {
+  mode: languageMode, // Set the language mode (e.g., text/x-csrc, text/x-c++src, etc.)
+  lineNumbers: true,
+  indentWithTabs: true, // Indent with tabs instead of spaces
+  smartIndent: true, // Enable smart indentation
+  matchBrackets: true, // Highlight matching brackets
+  autoCloseBrackets: true, // Automatically close brackets
+  styleActiveLine: true, // Highlight the active line
+  lineWrapping: true,
+  theme: "dracula",
+  autofocus: true,
+  viewportMargin: Infinity // Set the CodeMirror theme
+});
+ 
+// Event listener for running code
+runCodeButton.addEventListener('click', () => {
+  event.preventDefault();
+  const code = editor.getValue();
+  const datacode = {
+    'code': code,
+    'id': document.getElementById('hid').value,
+  };
+
+  try {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    fetch('/my-django-view/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+      },
+      body: JSON.stringify(datacode),
+    })
+    .then(response => response.text())
+    .then(data => {
+      console.log('Success:', data);
+      outputElement.textContent = data;
+      if(data.startsWith("Error"))
+        outputElement.style.color ='red';
+     else 
+      outputElement.style.color = 'green';
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      outputElement.textContent = error;
+      outputElement.style.color = 'red';
+    });
+  } catch (error) {
+    outputElement.textContent = 'Error: ' + error.message;
+  }
+  submitButton.disabled = false;
+});
+
+// Event listener for submitting code
+
+submitButton.addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent the default button action
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you really want to submit the code?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, submit it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirect to the URL specified in data-url attribute
+            document.getElementById("hidden-editor").value = editor.getValue();
+            form.submit();
+            window.location.href = submitButton.getAttribute('data-url');
+        }
+    });
+});
+    </script>
+
+
+</body>
+</html>
+

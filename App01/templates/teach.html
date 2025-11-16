@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="{% static 'executor/css/styles.css' %}" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="{% static 'executor/js/scriptstea.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+        }
+        input, textarea {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+        .form-container {
+            max-width: 500px;
+    margin: 10px auto ;
+    padding: 20px;
+    background: #c2ade4;
+    box-shadow: 0 0 10px rgba(23, 23, 23, 0.1);
+        }
+        .form-container h2 {
+            text-align: center;
+            color: #9052fc;
+        }
+        .form-container .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            margin-bottom: 15px;
+        } 
+        .btn-primar {
+            width: 100%;
+    padding: 05px;
+    background-color: #c1e9c1;
+    border: none;
+    border-radius: 5px;
+    color: #0f010c;
+    font-size: 16px;
+    cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: #0b3df2;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    {% include 'headeradmin.html' %}
+    <div id="layoutSidenav">
+        {% include 'sidebaradmin.html' %}
+        <div id="layoutSidenav_content">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 form-container">
+                        <h2>Teacher Registration Form</h2>
+                        <form id="registrationForm" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="firstName">First Name:</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name:</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone:</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="Subject">Subject</label>
+                                <select class="form-control" id="subject" name="sub_id">
+                                    <option value="">Select your Subject</option>
+                                    {% for j in Subject %}
+                                        <option value="{{ j.sub_id }}">{{ j.sub_names }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="experience">Years of Experience:</label>
+                                <input type="number" id="experience" name="experience" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address:</label>
+                                <textarea id="address" name="address" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstName">Create Password:</label>
+                                <input type="password" id="teach_pass" name="teach_pass" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" name="submit" class="btn btn-primar btn-block">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% include 'footeradmin.html' %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

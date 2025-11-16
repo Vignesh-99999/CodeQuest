@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Challenges</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            position: relative; /* Ensure positioning context for timer */
+        }
+        .breadcrumb {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .challenge-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .challenge-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+        .challenge-title {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .challenge-details {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        .solve-btn-link {
+            text-decoration: none; /* Remove underline from link */
+            color: inherit; /* Ensure text color is inherited from button */
+        }
+        .solve-btn {
+            background-color: #007bff; /* Button background color */
+            border: none; /* Remove button border */
+            color: white; /* Button text color */
+            padding: 12px 24px; /* Button padding */
+            text-align: center; /* Center text */
+            text-decoration: none; /* Remove text decoration */
+            display: inline-block; /* Ensure button is inline-block */
+            border-radius: 6px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            font-size: 18px; /* Font size */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .solve-btn:hover {
+            background-color: #0056b3; /* Darker background on hover */
+            transform: scale(1.05); /* Slightly enlarge button */
+        }
+        /* Timer styles */
+        .timer {
+            position: fixed; /* Fixes the position relative to the viewport */
+            top: 20px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            background-color: #282c34;
+            border: 2px solid #61dafb;
+            border-radius: 10px;
+            padding: 15px 25px; /* Add padding around the text */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            font-size: 24px; /* Increase font size */
+            color: #61dafb; /* Light blue color for text */
+            font-weight: bold;
+            z-index: 1000; /* Ensure it's above other content */
+            text-align: center; /* Center text */
+        }
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .challenge-card {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            .solve-btn {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+            .timer {
+                font-size: 20px;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .challenge-card {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            .solve-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            .timer {
+                font-size: 18px;
+                padding: 5px 15px;
+            }
+        }
+        .completed-message {
+            background-color: green;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: fit-content;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Timer Display -->
+    <!-- <div class="timer" id="timer">02:00:00</div> -->
+    <p class="timer" id="demo-{{ exam.exam_id }}"></p>
+    
+    {% for question in questions %}
+    <div class="challenge-card">
+        
+        <div class="challenge-title">{{ question.question_main}} and {{MarksDetails.question_id}}</div>
+        {% if question.que_id in MarksDetails %}
+        <div class="completed-message">
+            Submited
+        </div> 
+        {% else %}
+        <a href="{% url 'solve_question' question.que_id exam.exam_id %}" class="solve-btn-link">
+            <button class="solve-btn">Solve Question</button>
+        </a>
+        {% endif %}
+    </div>
+    {% endfor %}
+    
+    <script>
+        // Function to start countdown for each exam
+        function startCountdown(id, examStartDateTime, examEndDateTime) {
+            var countDownDate = new Date(examStartDateTime).getTime();
+            var examEndDate = new Date(examEndDateTime).getTime();
+        
+            var x = setInterval(function() {
+                var now = new Date().getTime();
+                var distanceToStart = countDownDate - now;
+                var distanceToEnd = examEndDate - now;
+        
+                // Ensure the countdown does not update too quickly on page load
+                if (distanceToStart > 0) {
+                    // Exam hasn't started yet
+                    var days = Math.floor(distanceToStart / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((distanceToStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distanceToStart % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distanceToStart % (1000 * 60)) / 1000);
+                    document.getElementById(id).innerHTML = "Starts In: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+                } else if (distanceToEnd > 0) {
+                    // Exam is running
+                    var hours = Math.floor((distanceToEnd % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distanceToEnd % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distanceToEnd % (1000 * 60)) / 1000);
+                    document.getElementById(id).innerHTML = "Exam Running: " + hours + "h " + minutes + "m " + seconds + "s ";
+                
+                    document.getElementById(id).closest('.item').onclick = function() {
+                        window.location.href = this.getAttribute('data-url');
+                    };
+                } else {
+                    // Exam has finished
+                    //clearInterval(x);
+                    document.getElementById(id).innerHTML = "EXAM FINISHED";
+                }
+            }, 1000);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+                // Convert ISO datetime strings to proper JavaScript Date objects
+                startCountdown('demo-{{ exam.exam_id }}', '{{ exam.exam_start_datetime_iso }}', '{{ exam.exam_end_datetime_iso }}');
+        });
+        
+        // Update timers every second
+        setInterval(updateTimers, 1000);
+        
+        // Initial update
+        document.addEventListener('DOMContentLoaded', updateTimers);
+        </script>
+        </body>
+</html>

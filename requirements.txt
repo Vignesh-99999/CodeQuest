@@ -1,0 +1,5 @@
+Django==5.0.6
+mysqlclient>=2.2.0
+# Windows timezone data (needed on Windows platforms)
+tzdata>=2023.3; sys_platform == "win32"
+

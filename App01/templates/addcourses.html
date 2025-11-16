@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Course</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e3f2fd;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        h1 {
+            text-align: center;
+            color: #444444;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-control {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-family: 'Roboto', sans-serif;
+        }
+        .btn-submit {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
+        .btn-submit:hover {
+            background-color: #388e3c;
+        }
+    </style>
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+<link href="{% static 'executor/css/styles.css' %}" rel="stylesheet" />
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+{% include 'headeradmin.html' %}
+<div id="layoutSidenav">
+    {% include 'sidebaradmin.html' %}
+    <div id="layoutSidenav_content">
+    <div class="container">
+        <h1>Add a New Course</h1>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="course_name" class="form-control" placeholder="Enter course name" required>
+            <button type="submit" class="btn-submit">Add Course</button>
+        </form>
+    </div>
+    {% include 'footeradmin.html' %}
+</body>
+</html>

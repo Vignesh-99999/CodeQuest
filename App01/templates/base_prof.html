@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <!-- CDN for Font Awesome icons and Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'assets/css/prof_dashboard.css' %}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Teacher Dashboard</h1>
+            <nav>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+                    <li class="scroll-to-section">
+                        <a href="{% url 'logout' %}">{{ teacher.email }} - Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="layout">
+        <aside>
+            <div class="notice">
+                <h3>Notice</h3>
+                <p>Reminder: Submit your grades by the end of the week.</p>
+            </div>
+            <h2>Navigation</h2>
+            <ul>
+                <li><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="{% url 'prof_test' %}"><i class="fas fa-chalkboard-teacher"></i> Schedule Test</a></li>
+                <li><a href="#"><i class="fas fa-book"></i> Assignments</a></li>
+                <li><a href="#"><i class="fas fa-graduation-cap"></i> Grades</a></li>
+                <li><a href="#"><i class="fas fa-file-alt"></i> Reports</a></li>
+            </ul>
+        </aside>
+        </div>
+{% block content %}
+{% endblock content %}
+<footer>
+        <p>&copy; 2024 Your School Name. All rights reserved.</p>
+    </footer>
+    <!-- CDN for Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

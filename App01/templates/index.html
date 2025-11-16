@@ -1,0 +1,114 @@
+<!-- 
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Executor</title>
+    <link rel="stylesheet" href="{% static 'executor/css/styles.css' %}">
+</head>
+<body>
+    <form method="POST" action="\execute">
+             {% csrf_token %}
+    <div class="container">
+        <div class="left-side">
+            <textarea id="editor" placeholder="Write your C code here..." name="code"></textarea>
+            <button id="run-code">Run Code</button>
+            <pre id="output"></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/javascript/javascript.min.js"></script>
+        </div>
+        <div class="right-side">
+            <pre id="output"></pre>
+        </div>
+    </div>
+    </form>
+    {% comment %} <script src="{% static 'executor/js/scripts.js' %}"></script> {% endcomment %}
+</body>
+</html> -->
+
+
+{% comment %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Workspace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.css">
+    <link rel="stylesheet" href="{% static 'executor/css/style.css' %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+    <form method="POST" >
+        {% csrf_token %}
+     <textarea id="editor" name="code"></textarea>
+    <button id="run-code">Run Code</button>
+    <pre id="output"></pre>
+</form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/javascript/javascript.min.js"></script>
+    <script src="{% static 'executor/js/scripts.js' %}"></script>
+</body>
+</html>{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Workspace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.css">
+    <link rel="stylesheet" href="{% static 'executor/css/style.css' %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <textarea id="editor" name="code"></textarea>
+        <button id="run-code">Run Code</button>
+        <pre id="output"></pre>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/python/python.min.js"></script>
+    <script src="{% static 'executor/js/scripts.js' %}"></script>
+</body>
+</html> {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Workspace</title>
+     <!-- CodeMirror core CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.css">
+    <!-- CodeMirror theme CSS (replace 'material' with your desired theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/theme/material.min.css">
+    <!-- CodeMirror core JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.js"></script>
+    <!-- Mode for C language -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/clike/clike.min.js"></script>
+    <!-- Mode for C++ language -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/cpp/cpp.min.js"></script>
+    <!-- Mode for Python language -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/python/python.min.js"></script>
+    <!-- Mode for JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/javascript/javascript.min.js"></script>
+    <link rel="stylesheet" href="{% static 'executor/css/style.css' %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <textarea id="editor" name="code"></textarea>
+        <button id="run-code">Run Code</button>
+        <pre id="output"></pre>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.0/mode/clike/clike.min.js"></script>
+    <script src="{% static 'executor/js/scripts.js' %}"></script>
+</body>
+</html>

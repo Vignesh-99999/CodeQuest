@@ -1,0 +1,215 @@
+{% extends 'base_prof.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks Details</title>
+    <style>
+        /* General styling for the form */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 100px;
+        }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        form {
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Styling for the form elements */
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        select, button {
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Styling for the table */
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="marksForm" method="POST" action="{% url 'SearchMarks' %}">
+        {% csrf_token %}
+        <main>
+            <div style="justify-content:center; margin-top:-100px; display: flex; flex-direction: column; align-items: center;">
+                <h2>Marks</h2>
+                <h3>Select Division and Subject:</h3>
+                <div style="padding:10px; gap:10px; display: flex; flex-direction: column; align-items: flex-start;">
+                    <label for="division">Division:</label>
+                    <select id="division" name="division" onchange="resetDateDropdown(); this.form.submit()">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+
+                    <label for="subject">Subject:</label>
+                    <select id="subject" name="subject" onchange="resetDateDropdown(); this.form.submit()">
+                        <option value="1">C</option>
+                        <option value="2">C++</option>
+                        <option value="3">JAVA</option>
+                        <option value="4">PYTHON</option>
+                    </select>
+
+                    <button id="submit" type="submit">Search Test</button>
+
+                    <label for="exam_date">Exam Date:</label>
+                    <select id="exam_date" name="exam_date">
+                        <option value="">Select an exam date</option>
+                        {% for date in date_list %}
+                            <option value="{{ date }}">{{ date }}</option>
+                        {% empty %}
+                            <option value="">No available dates</option>
+                        {% endfor %}
+                    </select>
+
+                    <button id="submit" type="submit" formaction="{% url 'Searchexam' %}">Display Marks</button>
+                </div>
+
+                <!-- Student marks table -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Roll Number</th>
+                            <th>Marks Obtained</th>
+                            <th>Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if stu %}
+                            {% for student in stu %}
+                            <tr>
+                                <td>{{ student.name }}</td>
+                                <td>{{ student.roll_no }}</td>
+                                <td>{{ student.marks_obtained }}</td>
+                                <td>{{ student.subject }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="4">No marks found.</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+                <button id="submit" type="submit" formaction="{% url 'download_marks_excel' %}">Download Excel</button>
+            </div>
+        </main>
+    </form>
+<script>
+    function resetDateDropdown() {
+        // Reset the exam date dropdown to the first option
+        document.getElementById('exam_date').selectedIndex = 0;
+    }
+
+    document.getElementById('displayMarksBtn').addEventListener('click', function() {
+        const formData = new FormData(document.getElementById('marksForm'));
+
+        // AJAX request to submit form data without refreshing the page
+        fetch("{% url 'Searchexam' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+        })
+        .then(response => response.json())  // Expect JSON response
+        .then(data => {
+            if (data.success) {
+                const marksTableBody = document.getElementById('marksTableBody');
+                marksTableBody.innerHTML = '';  // Clear previous results
+
+                // Display the table
+                document.getElementById('marksTable').style.display = 'table';
+
+                // Loop through student data and create table rows
+                data.stu.forEach(student => {
+                    const row = `<tr>
+                                    <td>${student.name}</td>
+                                    <td>${student.roll_no}</td>
+                                    <td>${student.marks_obtained}</td>
+                                    <td>${student.subject}</td>
+                                 </tr>`;
+                    marksTableBody.insertAdjacentHTML('beforeend', row);
+                });
+            } else {
+                alert('No marks found.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+</body>
+</html>
+
+    
+
+
+
+
+{% endblock content %}

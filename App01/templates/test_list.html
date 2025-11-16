@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+.icon {
+    margin: 50px;
+}
+.timer {
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    background-color: #f3f3f3;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+<script>
+// Function to start countdown for each exam
+function startCountdown(id, examStartDateTime, examEndDateTime) {
+    var countDownDate = new Date(examStartDateTime).getTime();
+    var examEndDate = new Date(examEndDateTime).getTime();
+
+    var x = setInterval(function() {
+        var now = new Date().getTime();
+        var distanceToStart = countDownDate - now;
+        var distanceToEnd = examEndDate - now;
+
+        // Ensure the countdown does not update too quickly on page load
+        if (distanceToStart > 0) {
+            // Exam hasn't started yet
+            var days = Math.floor(distanceToStart / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distanceToStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distanceToStart % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distanceToStart % (1000 * 60)) / 1000);
+            document.getElementById(id).innerHTML = "Starts In: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+        } else if (distanceToEnd > 0) {
+            // Exam is running
+            var hours = Math.floor((distanceToEnd % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distanceToEnd % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distanceToEnd % (1000 * 60)) / 1000);
+            document.getElementById(id).innerHTML = "Exam Running: " + hours + "h " + minutes + "m " + seconds + "s ";
+        
+            document.getElementById(id).closest('.item').onclick = function() {
+                window.location.href = this.getAttribute('data-url');
+            };
+        } else {
+            // Exam has finished
+            //clearInterval(x);
+            document.getElementById(id).innerHTML = "EXAM FINISHED";
+        }
+    }, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    {% for exam in exams %}
+        // Convert ISO datetime strings to proper JavaScript Date objects
+        startCountdown('demo-{{ exam.exam_id }}', '{{ exam.exam_start_datetime_iso }}', '{{ exam.exam_end_datetime_iso }}');
+    {% endfor %}
+});
+
+// Update timers every second
+setInterval(updateTimers, 1000);
+
+// Initial update
+document.addEventListener('DOMContentLoaded', updateTimers);
+</script>
+
+{% if exams %}
+<div class="section events" id="events">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="section-heading">
+                    <h6>Schedule</h6>
+                    <h2>Upcoming Events</h2>
+                </div>
+            </div>
+            {% for exam in exams %}
+            <div class="col-lg-12 col-md-6">
+                <div class="item" data-url="{% url 'exam_detail' examid=exam.exam_id %}">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="image">
+                                <img src="{% static 'assets/images/event-01.jpg' %}" alt="Event Image">
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <ul>
+                                <li>
+                                    <span class="category">{{ exam.sub_id.sub_names }}</span>
+                                    <h4>{{ exam.exam_title }}</h4>
+                                </li>
+                                <li>
+                                    <b>Description:</b>
+                                    <br>
+                                    {{ exam.description }}
+                                </li>
+                                <li>
+                                    <p class="timer" id="demo-{{ exam.exam_id }}"></p>
+                                </li>
+                            </ul>
+                            <a href="#"><i class="fa fa-angle-right icon"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="notification">
+    <div class="message">No Upcoming Tests.</div>
+</div>
+{% endif %}
+{% endblock content %}
